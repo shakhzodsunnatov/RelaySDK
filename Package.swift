@@ -1,24 +1,42 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 5.8
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
+// swift-tools-version: 5.8
+// The swift-tools-version declares the minimum version of Swift required to build this package
+
+
 let package = Package(
     name: "RelaySDK",
+    platforms: [
+        .iOS(.v12),
+        .macOS(.v10_15)
+    ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "RelaySDK",
-            targets: ["RelaySDK"]),
+        .library(name: "RelaySDK", targets: ["RelaySDK"])
+    ],
+    dependencies: [
+//        .package(url: "https://github.com/nats-io/nats.swift.git", from: "0.4.0"),
+//        .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.33.0"),
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2")
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "RelaySDK"),
+            name: "RelaySDK",
+            dependencies: [
+                .product(name: "NIO", package: "swift-nio"),
+                .product(name: "Logging", package: "swift-log")
+            ]
+        ),
         .testTarget(
             name: "RelaySDKTests",
-            dependencies: ["RelaySDK"]
+            dependencies: [
+                "RelaySDK",
+                .product(name: "NIO", package: "swift-nio"),
+                .product(name: "Logging", package: "swift-log")
+            ]
         ),
     ]
 )
